@@ -12,6 +12,11 @@
     "promises",
     "promises-aplus"
   ],
+  "homepage": "https://github.com/ramanarupa/chai-promised",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ramanarupa/chai-promised.git"
+  },
   "author": "Domenic Denicola <d@domenic.me> (https://domenic.me)",
   "contributors": [
     {
