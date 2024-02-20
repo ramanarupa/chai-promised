@@ -10,7 +10,7 @@ Please see documentation at [chai-as-promised](https://www.chaijs.com/plugins/ch
 
 ## Installation
 
-`npm install @chai/promised`
+`npm install chai-promised`
 
 ## Usage
 
