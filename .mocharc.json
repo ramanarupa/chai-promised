@@ -1,0 +1,17 @@
+{
+  "extensions": ["ts"],
+  "spec": ["./test/index.ts"],
+  "project": "./test/tsconfig.json",
+  "node-option": [
+    "experimental-specifier-resolution=node",
+    "trace-warnings",
+    "loader=ts-node/esm",
+    "trace-uncaught"
+  ],
+  "require": [
+    "ts-node/register"
+  ],
+  "color": true,
+  "exit": true,
+  "recursive": true
+}

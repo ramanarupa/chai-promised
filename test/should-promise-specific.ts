@@ -1,19 +1,17 @@
-"use strict";
-require("./support/setup.js");
-const shouldPass = require("./support/common.js").shouldPass;
-const shouldFail = require("./support/common.js").shouldFail;
-const expect = require("chai").expect;
+import * as chai from "chai";
+import { shouldFail, shouldPass } from './common';
 
 describe("Promise-specific extensions:", () => {
-    let promise = null;
+    let promise: Promise<any>;
     const error = new Error("boo");
+    // @ts-ignore
     error.myProp = ["myProp value"];
     const custom = "No. I am your father.";
 
-    function assertingDoneFactory(done) {
-        return result => {
+    function assertingDoneFactory(done: any) {
+        return (result: any) => {
             try {
-                expect(result).to.equal(error);
+                chai.expect(result).to.equal(error);
             } catch (assertionError) {
                 done(assertionError);
             }
@@ -147,6 +145,7 @@ describe("Promise-specific extensions:", () => {
     describe("when the promise is rejected", () => {
         beforeEach(() => {
             promise = Promise.reject(error);
+            promise.catch((e) => e);
         });
 
         describe(".fulfilled", () => {
@@ -240,6 +239,7 @@ describe("Promise-specific extensions:", () => {
         describe("with an Error having message 'foo bar'", () => {
             beforeEach(() => {
                 promise = Promise.reject(new Error("foo bar"));
+                promise.catch((e) => e);
             });
 
             describe(".rejectedWith('foo')", () => {
@@ -317,6 +317,7 @@ describe("Promise-specific extensions:", () => {
         describe("with a RangeError", () => {
             beforeEach(() => {
                 promise = Promise.reject(new RangeError());
+                promise.catch((e) => e);
             });
 
             describe(".rejectedWith(RangeError)", () => {
@@ -353,6 +354,7 @@ describe("Promise-specific extensions:", () => {
         describe("with a RangeError having a message 'foo bar'", () => {
             beforeEach(() => {
                 promise = Promise.reject(new RangeError("foo bar"));
+                promise.catch((e) => e);
             });
 
             describe(".rejectedWith(RangeError, 'foo')", () => {
@@ -553,6 +555,7 @@ describe("Promise-specific extensions:", () => {
         describe("the original promise is rejected", () => {
             beforeEach(() => {
                 promise = Promise.reject(error);
+                promise.catch((e) => e);
             });
 
             describe("but the follow-up promise is fulfilled", () => {
@@ -584,19 +587,19 @@ describe("Promise-specific extensions:", () => {
             const number = 5;
 
             it("should fail for .fulfilled", () => {
-                expect(() => number.should.be.fulfilled).to.throw(TypeError, "not a thenable");
+                chai.expect(() => number.should.be.fulfilled).to.throw(TypeError, "not a thenable");
             });
             it("should fail for .rejected", () => {
-                expect(() => number.should.be.rejected).to.throw(TypeError, "not a thenable");
+                chai.expect(() => number.should.be.rejected).to.throw(TypeError, "not a thenable");
             });
             it("should fail for .become", () => {
-                expect(() => number.should.become(5)).to.throw(TypeError, "not a thenable");
+                chai.expect(() => number.should.become(5)).to.throw(TypeError, "not a thenable");
             });
             it("should fail for .eventually", () => {
-                expect(() => number.should.eventually.equal(5)).to.throw(TypeError, "not a thenable");
+                chai.expect(() => number.should.eventually.equal(5)).to.throw(TypeError, "not a thenable");
             });
             it("should fail for .notify", () => {
-                expect(() => number.should.notify(() => { /* Doesn't matter */ }))
+                chai.expect(() => number.should.notify(() => { /* Doesn't matter */ }))
                     .to.throw(TypeError, "not a thenable");
             });
         });
@@ -623,7 +626,7 @@ describe("Promise-specific extensions:", () => {
 
     describe("With promises that only become rejected later (GH-24)", () => {
         it("should wait for them", done => {
-            let reject;
+            let reject: (reason: any) => void;
             const rejectedLaterPromise = new Promise((_, r) => {
                 reject = r;
             });

@@ -1,13 +1,11 @@
-"use strict";
-const chai = require("chai");
-const chaiAsPromised = require("..");
-const expect = chai.expect;
+import { chaiPromised } from '../src/chai-promised';
+import * as chai from 'chai';
 
 function newMethod() {
     // Do nothing
 }
 
-function newMethodChain() {
+function newMethodChain(this: any){
     /* eslint-disable no-invalid-this */
     return this.assert(this._obj.__property === true);
     /* eslint-enable no-invalid-this */
@@ -28,17 +26,19 @@ chai.use(ctx => {
 describe("New method `newMethod` added to chai", () => {
     describe("before executing chai.use(chaiAsPromised)", () => {
         it("should work", () => {
-            expect(makeFunction()).to.have.been.newMethod();
+            // @ts-ignore
+            chai.expect(makeFunction()).to.have.been.newMethod();
         });
     });
 
     describe("after executing chai.use(chaiAsPromised)", () => {
         before(() => {
-            chai.use(chaiAsPromised);
+            chai.use(chaiPromised);
         });
 
         it("should still work", () => {
-            expect(makeFunction()).to.have.been.newMethod();
+            // @ts-ignore
+            chai.expect(makeFunction()).to.have.been.newMethod();
         });
     });
 });

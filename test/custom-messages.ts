@@ -1,10 +1,7 @@
-"use strict";
-require("./support/setup.js");
-const shouldPass = require("./support/common.js").shouldPass;
-const shouldFail = require("./support/common.js").shouldFail;
+import { shouldFail, shouldPass } from './common';
 
 describe("Custom messages", () => {
-    let promise = null;
+    let promise: Promise<number>;
     const message = "He told me enough! He told me you killed him!";
 
     beforeEach(() => {

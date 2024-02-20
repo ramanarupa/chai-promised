@@ -1,10 +1,7 @@
-"use strict";
-require("./support/setup.js");
-const shouldPass = require("./support/common.js").shouldPass;
-const shouldFail = require("./support/common.js").shouldFail;
+import { shouldFail, shouldPass } from './common';
 
 describe("Fulfillment value assertions:", () => {
-    let promise = null;
+    let promise: Promise<any>;
 
     describe("Direct tests of fulfilled promises:", () => {
         describe("Basics:", () => {
@@ -72,7 +69,7 @@ describe("Fulfillment value assertions:", () => {
                 Promise.resolve([]).should.eventually.be.an.instanceOf(Array).notify(done);
             });
 
-            if (Object.prototype.should.nested) {
+            if (Object.prototype.should?.nested) {
                 it(".eventually.have.nested.property('foo.bar')", done => {
                     Promise.resolve({ foo: { bar: "baz" } }).should.eventually.have.nested.property("foo.bar", "baz")
                         .notify(done);

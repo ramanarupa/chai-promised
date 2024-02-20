@@ -1,11 +1,8 @@
-"use strict";
-require("./support/setup.js");
-const shouldPass = require("./support/common.js").shouldPass;
-const shouldFail = require("./support/common.js").shouldFail;
-const assert = require("chai").assert;
+import { shouldFail, shouldPass } from './common';
+import { assert, Assertion } from 'chai';
 
 describe("Assert interface:", () => {
-    let promise = null;
+    let promise: any = null;
     const error = new Error("boo");
     const custom = "No. I am your father.";
 
@@ -92,10 +89,10 @@ describe("Assert interface:", () => {
         });
     });
 
-
     describe("when the promise is rejected", () => {
         beforeEach(() => {
             promise = Promise.reject(error);
+            promise.catch((e: any) => e);
         });
 
         describe(".isFulfilled(promise)", () => {
@@ -139,6 +136,7 @@ describe("Assert interface:", () => {
         describe("with an Error having message 'foo bar'", () => {
             beforeEach(() => {
                 promise = Promise.reject(new Error("foo bar"));
+                promise.catch((e: any) => e);
             });
 
             describe(".isRejected(promise, 'bar')", () => {
@@ -184,6 +182,7 @@ describe("Assert interface:", () => {
         describe("with a RangeError", () => {
             beforeEach(() => {
                 promise = Promise.reject(new RangeError());
+                promise.catch((e: any) => e);
             });
 
             describe(".isRejected(promise, RangeError)", () => {
@@ -201,6 +200,7 @@ describe("Assert interface:", () => {
         describe("with a RangeError having a message 'foo bar'", () => {
             beforeEach(() => {
                 promise = Promise.reject(new RangeError("foo bar"));
+                promise.catch((e: any) => e);
             });
 
             describe(".isRejected(promise, RangeError, 'foo')", () => {

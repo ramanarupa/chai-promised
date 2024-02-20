@@ -1,15 +1,14 @@
-"use strict";
 
-exports.shouldPass = promiseProducer => {
+export const shouldPass = (promiseProducer: () => any) => {
     it("should return a fulfilled promise", done => {
         promiseProducer().then(
             () => done(),
-            reason => done(new Error(`Expected promise to be fulfilled but it was rejected with ${reason.stack}`))
+          (reason: any) => done(new Error(`Expected promise to be fulfilled but it was rejected with ${reason.stack}`))
         );
     });
 };
 
-exports.shouldFail = options => {
+export const shouldFail = (options: { op: Function; message?: string; notMessage?: any; }) => {
     const promiseProducer = options.op;
     const desiredMessageSubstring = options.message;
     const nonDesiredMessageSubstring = options.notMessage;
@@ -19,7 +18,7 @@ exports.shouldFail = options => {
             () => {
                 throw new Error("Expected promise to be rejected with an assertion error, but it was fulfilled");
             },
-            reason => {
+            (reason: { constructor: { name: string; }; message: string | any[]; }) => {
                 if (Object(reason) !== reason || reason.constructor.name !== "AssertionError") {
                     throw new Error(`Expected promise to be rejected with an AssertionError but it was rejected ` +
                                     `with ${reason}`);

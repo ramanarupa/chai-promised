@@ -1,5 +1,6 @@
 {
-  "name": "chai-as-promised",
+  "name": "@chai/promised",
+  "version": "1.0.0",
   "description": "Extends Chai with assertions about promises.",
   "keywords": [
     "chai",
@@ -11,30 +12,61 @@
     "promises",
     "promises-aplus"
   ],
-  "version": "7.1.1",
   "author": "Domenic Denicola <d@domenic.me> (https://domenic.me)",
-  "license": "WTFPL",
-  "repository": "domenic/chai-as-promised",
-  "main": "./lib/chai-as-promised.js",
-  "files": [
-    "lib"
+  "contributors": [
+    {
+      "name": "Rustam Gaifiev",
+      "email": "rustam.bmt@gmail.com"
+    }
   ],
-  "scripts": {
-    "test": "mocha",
-    "test-travis": "npm install chai@$CHAI_VERSION && npm test",
-    "lint": "eslint .",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha && opener ./coverage/lcov-report/lib/chai-as-promised.js.html"
+  "license": "WTFPL",
+  "packageManager": "pnpm@8.12.1",
+  "engines": {
+    "node": ">=20.10.0"
   },
+  "type": "module",
+  "types": "./dist/chai-promise.d.ts",
+  "main": "./dist/chai-promise.js",
+  "module": "./dist/chai-promise.js",
+  "files": [
+    "/dist/**/*",
+    "README.md"
+  ],
   "dependencies": {
-    "check-error": "^1.0.2"
+    "chai": "^5.1.0",
+    "check-error": "^2.0.0"
   },
   "peerDependencies": {
-    "chai": ">= 2.1.2 < 5"
+    "chai": ">= 5"
   },
   "devDependencies": {
-    "chai": "^4.0.2",
-    "eslint": "^3.19.0",
-    "istanbul": "0.4.5",
-    "mocha": "^3.4.2"
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-eslint": "^9.0.5",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.19",
+    "@types/sinon": "^17.0.3",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "eslint": "^8.56.0",
+    "eslint-config-google": "^0.14.0",
+    "mocha": "^10.3.0",
+    "mochawesome": "^7.1.3",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.12.0",
+    "rollup-plugin-copy": "^3.5.0",
+    "ts-mocha": "^10.0.0",
+    "ts-node": "^10.9.2",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3"
+  },
+  "scripts": {
+    "lint": "eslint \"./src/*.ts\"",
+    "lint:fix": "eslint \"./src/*.ts\" --fix",
+    "clean": "rimraf ./dist ./reports ./.nyc_output",
+    "test": "npm run clean && ts-mocha -p test/tsconfig.json test/index.ts --reporter mochawesome --reporter-options reportDir=reports",
+    "build": "npm run clean && rollup -c rollup.config.js"
   }
 }

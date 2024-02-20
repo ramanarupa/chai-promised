@@ -1,6 +1,2 @@
-/node_modules/
-/npm-debug.log
-
-/coverage/
-
-/test/browser/output.html
+/dist
+/pnpm-lock.yaml
