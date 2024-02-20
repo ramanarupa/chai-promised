@@ -15,7 +15,7 @@ Please see documentation at [chai-as-promised](https://www.chaijs.com/plugins/ch
 ## Usage
 
 ``` javascript
-import chaiAsPromised from '@chai/promised';
+import chaiAsPromised from 'chai-promised';
 import * as chai from 'chai';
 
 chai.use(chaiAsPromised);

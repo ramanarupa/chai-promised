@@ -1,5 +1,5 @@
 {
-  "name": "@chai/promised",
+  "name": "chai-promised",
   "version": "1.0.0",
   "description": "Extends Chai with assertions about promises.",
   "keywords": [
