@@ -5,8 +5,8 @@
 
 # Chai Assertions for Promises
 
-It is a fork of **Chai as Promised** for supporting Chai > 5.x
-Please see documentation at [chai-as-promised](https://www.chaijs.com/plugins/chai-as-promised/)
+It is a fork of **Chai as Promised** for supporting Chai > 5.x  
+Please see documentation at [chai-as-promised](https://www.chaijs.com/plugins/chai-as-promised/)  
 
 ## Installation
 
@@ -15,7 +15,7 @@ Please see documentation at [chai-as-promised](https://www.chaijs.com/plugins/ch
 ## Usage
 
 ``` javascript
-import chaiAsPromised from 'chai-promised';
+import { chaiAsPromised } from 'chai-promised';
 import * as chai from 'chai';
 
 chai.use(chaiAsPromised);
