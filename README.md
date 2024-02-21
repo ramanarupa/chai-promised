@@ -11,7 +11,7 @@ Please see documentation at [chai-as-promised](https://www.chaijs.com/plugins/ch
 ## Installation
 
 `npm uninstall @types/chai-as-promised chai-as-promised --save-dev --force`  
-`npm install chai-promised`  
+`npm install chai-promised --save-dev`  
 
 ## Usage
 
