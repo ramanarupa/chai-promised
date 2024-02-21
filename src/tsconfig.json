@@ -20,7 +20,7 @@
     "sourceMap": true,
     "types": [
       "@types/node",
-      "@types/chai",
+      "@types/chai"
     ]
   },
   "include": [

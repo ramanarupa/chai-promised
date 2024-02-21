@@ -1,3 +1,12 @@
+declare module 'chai-promised' {
+  export function chaiAsPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void;
+  export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void;
+  export function transformAsserterArgs(values: any): any;
+  export function changeTransformAsserterArgs(newTransform: Function): Function;
+  export function transferPromiseness(assertion: Chai.Assertion, promise: Promise<any>): void;
+  export function chageTransferPromiseness(newTransfer: Function): Function;
+}
+
 declare namespace Chai {
   interface PromisedAssertion extends Eventually, PromiseLike<any> {
   }

@@ -1,6 +1,6 @@
 {
   "name": "chai-promised",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Extends Chai with assertions about promises.",
   "keywords": [
     "chai",
@@ -30,9 +30,9 @@
     "node": ">=20.10.0"
   },
   "type": "module",
-  "types": "./dist/chai-promise.d.ts",
-  "main": "./dist/chai-promise.js",
-  "module": "./dist/chai-promise.js",
+  "types": "./dist/chai-promised.d.ts",
+  "main": "./dist/chai-promised.js",
+  "module": "./dist/chai-promised.js",
   "files": [
     "/dist/**/*",
     "README.md"
@@ -71,7 +71,7 @@
     "lint": "eslint \"./src/*.ts\"",
     "lint:fix": "eslint \"./src/*.ts\" --fix",
     "clean": "rimraf ./dist ./reports ./.nyc_output",
-    "test": "npm run clean && ts-mocha -p test/tsconfig.json test/index.ts --reporter mochawesome --reporter-options reportDir=reports",
-    "build": "npm run clean && rollup -c rollup.config.js"
+    "test": "pnpm run clean && ts-mocha -p test/tsconfig.json test/index.ts --reporter mochawesome --reporter-options reportDir=reports",
+    "build": "pnpm run clean && rollup -c rollup.config.js"
   }
 }
