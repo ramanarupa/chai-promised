@@ -5,9 +5,10 @@
 
 # Chai Assertions for Promises
 
-[![TypeScript](https://img.shields.io/npm/v/chai?label=chai)](https://www.npmjs.com/package/chai)
-[![TypeScript](https://img.shields.io/npm/v/typescript?label=typescript)](https://www.npmjs.com/package/typescript)
-[![TypeScript](https://img.shields.io/npm/v/rollup?label=rollup)](https://www.npmjs.com/package/rollup)
+![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Framanarupa%2Fchai-promised%2Fmaster%2Fpackage.json&query=%24.dependencies.chai&label=chai)
+![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Framanarupa%2Fchai-promised%2Fmaster%2Fpackage.json&query=%24.devDependencies.typescript&label=typescript)
+![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Framanarupa%2Fchai-promised%2Fmaster%2Fpackage.json&query=%24.devDependencies.rollup&label=rollup)
+[![pnpm](https://img.shields.io/npm/v/pnpm?label=pnpm)](https://www.npmjs.com/package/pnpm)
 
 It is a fork of **Chai as Promised** for supporting Chai >= 5.x  
 Please see documentation at [chai-as-promised](https://www.chaijs.com/plugins/chai-as-promised/)  

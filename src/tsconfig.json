@@ -17,7 +17,7 @@
     "newLine": "lf",
     "removeComments": false,
     "rootDir": "./",
-    "sourceMap": true,
+    "sourceMap": false,
     "types": [
       "@types/node",
       "@types/chai"
