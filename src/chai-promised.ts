@@ -1,6 +1,7 @@
 
 import PromisedAssertion = Chai.PromisedAssertion;
 import Assertion = Chai.Assertion;
+import ChaiPromise = Chai.ChaiPromise;
 
 export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void {
   const Assertion = chai.Assertion;
@@ -336,31 +337,25 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
 
   // @ts-ignore
   assert.eventually = {};
-  originalAssertMethods.forEach(assertMethodName => {
-    // @ts-ignore
-    assert.eventually[assertMethodName] = function(promise): ChaiPromise<any> {
-      const otherArgs = Array.prototype.slice.call(arguments, 1);
+  originalAssertMethods.forEach((assertMethodName: string) => {
 
+    assert.eventually[assertMethodName] = function(promise: Promise<any>, ...otherArgs: any[]): Chai.ChaiPromise<any> {
       let customRejectionHandler;
-      // @ts-ignore
-      const message = arguments[assert[assertMethodName].length - 1];
+      const message = otherArgs[assert[assertMethodName].length-2];
       if (typeof message === 'string') {
         customRejectionHandler = (reason: any) => {
           throw new chai.AssertionError(`${message}\n\nOriginal reason: ${utils.inspect(reason)}`);
         };
       }
 
-      const returnedPromise = promise.then(
-        // @ts-ignore
-        (fulfillmentValue: any) => assert[assertMethodName].apply(assert, [fulfillmentValue].concat(otherArgs)),
-        customRejectionHandler
+      const returnedPromise: Record<string, any> = promise.then(
+        (fulfillmentValue: any) => assert[assertMethodName](fulfillmentValue, ...otherArgs), customRejectionHandler
       );
-
       returnedPromise.notify = (done: any) => {
-        doNotify(returnedPromise, done);
+        doNotify(returnedPromise as Promise<any>, done);
       };
 
-      return returnedPromise;
+      return returnedPromise as Chai.ChaiPromise<any>;
     };
   });
 }

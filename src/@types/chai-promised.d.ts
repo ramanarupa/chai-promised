@@ -21,7 +21,7 @@ declare namespace Chai {
     notify(fn: Function): PromisedAssertion;
   }
 
-  export interface AssertStatic extends Assert {
+  export interface AssertStatic extends Assert, Record<string, any> {
     eventually: PromisedAssert;
   }
 
@@ -255,7 +255,7 @@ declare namespace Chai {
     notify(fn: Function): PromiseLike<void>;
   }
 
-  export interface PromisedAssert {
+  export interface PromisedAssert extends Record<string, any> {
     fail(actual?: PromiseLike<any>, expected?: any, msg?: string, operator?: string): PromiseLike<void>;
 
     isOk(val: PromiseLike<any>, msg?: string): ChaiPromise<void>;
