@@ -19,6 +19,7 @@ declare namespace Chai {
     rejected: PromisedAssertion;
     rejectedWith: PromisedThrow;
     notify(fn: Function): PromisedAssertion;
+    then: any
   }
 
   export interface AssertStatic extends Assert, Record<string, any> {
@@ -248,6 +249,7 @@ declare namespace Chai {
     isFulfilled(promise: PromiseLike<any>, message?: string): PromiseLike<void>;
     becomes(promise: PromiseLike<any>, expected: any, message?: string): PromiseLike<void>;
     doesNotBecome(promise: PromiseLike<any>, expected: any, message?: string): PromiseLike<void>;
+    isRejected(promise: PromiseLike<any>, errorLike: Function | Error, errMsgMatcher: string | RegExp, message: string): PromiseLike<void>;
     isRejected(promise: PromiseLike<any>, message?: string): PromiseLike<void>;
     isRejected(promise: PromiseLike<any>, expected: any, message?: string): PromiseLike<void>;
     isRejected(promise: PromiseLike<any>, expected: any, errMsgMatcher: RegExp | string | undefined, message?: string): PromiseLike<void>;

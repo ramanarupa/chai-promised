@@ -1,7 +1,7 @@
 
 import PromisedAssertion = Chai.PromisedAssertion;
 import Assertion = Chai.Assertion;
-import ChaiPromise = Chai.ChaiPromise;
+import PromisedAssert = Chai.PromisedAssert;
 
 export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void {
   const Assertion = chai.Assertion;
@@ -40,7 +40,6 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
     return proxify === undefined ? assertion : proxify(assertion, methodName);
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
   function method(this: Chai.Assertion, name: string, asserter: Function) {
     utils.addMethod(Assertion.prototype, name, function(this: Chai.Assertion) {
       assertIsAboutPromise(this);
@@ -122,7 +121,6 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
       }
     );
 
-    // @ts-ignore
     transferPromiseness(this, derivedPromise);
     return this;
   });
@@ -319,24 +317,18 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
     return typeof assert[propName] === 'function';
   });
 
-  // @ts-ignore
   assert.isFulfilled = (promise, message) => (new Assertion(promise, message)).to.be.fulfilled;
 
   // @ts-ignore
-  assert.isRejected = (promise, errorLike, errMsgMatcher, message) => {
+  assert.isRejected = (promise: PromiseLike<any>, errorLike: Function | Error, errMsgMatcher: string | RegExp, message: string) => {
     const assertion = new Assertion(promise, message);
-    // @ts-ignore
     return assertion.to.be.rejectedWith(errorLike, errMsgMatcher, message);
   };
 
-  // @ts-ignore
   assert.becomes = (promise, value, message) => assert.eventually.deepEqual(promise, value, message);
-
-  // @ts-ignore
   assert.doesNotBecome = (promise, value, message) => assert.eventually.notDeepEqual(promise, value, message);
+  assert.eventually = {} as PromisedAssert;
 
-  // @ts-ignore
-  assert.eventually = {};
   originalAssertMethods.forEach((assertMethodName: string) => {
 
     assert.eventually[assertMethodName] = function(promise: Promise<any>, ...otherArgs: any[]): Chai.ChaiPromise<any> {
@@ -361,7 +353,6 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
 }
 
 export let transferPromiseness = (assertion: Assertion, promise: Promise<any>) => {
-  // @ts-ignore
   assertion.then = promise.then.bind(promise);
 };
 
