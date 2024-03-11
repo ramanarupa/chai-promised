@@ -40,17 +40,18 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
     return proxify === undefined ? assertion : proxify(assertion, methodName);
   }
 
-  function method(this: Chai.Assertion, name: string, asserter: Function) {
-    utils.addMethod(Assertion.prototype, name, function(this: Chai.Assertion) {
+  function method(name: string, asserter: Function) {
+    utils.addMethod(Assertion.prototype, name, function(this: Chai.Assertion, ...otherArgs: any[]) {
       assertIsAboutPromise(this);
-      return asserter.apply(this, arguments);
+      // fix error here
+      return asserter.apply(this, otherArgs);
     });
   }
 
   function property(name: string, asserter: any) {
-    utils.addProperty(Assertion.prototype, name, function(this: Chai.Assertion) {
+    utils.addProperty(Assertion.prototype, name, function(this: Chai.Assertion, ...otherArgs: any[]) {
       assertIsAboutPromise(this);
-      return proxifyIfSupported(asserter.apply(this, arguments), name);
+      return proxifyIfSupported(asserter.apply(this, otherArgs), name);
     });
   }
 
@@ -68,7 +69,7 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
     assertion.assert(false, message, null, extra.expected, extra.actual);
   }
 
-  function getBasePromise(assertion: any) {
+  function getBasePromise(assertion: Assertion) {
     return typeof assertion.then === 'function' ? assertion : assertion._obj;
   }
 
@@ -125,8 +126,7 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
     return this;
   });
 
-  // @ts-ignore
-  method('rejectedWith', function(this: PromiseAssertion, errorLike: any, errMsgMatcher: any, message: string) {
+  method('rejectedWith', function(this: Chai.Assertion, errorLike: any, errMsgMatcher: any, message: string) {
     let errorLikeName: any = null;
     const negate = utils.flag(this, 'negate') || false;
 
@@ -228,14 +228,12 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
     return this;
   });
 
-  // @ts-ignore
-  method('notify', function(this: PromiseAssertion, done: Function) {
+  method('notify', function(this: Chai.Assertion, done: Function) {
     doNotify(getBasePromise(this), done);
     return this;
   });
 
-  // @ts-ignore
-  method('become', function(this: PromiseAssertion, value, message) {
+  method('become', function(this: PromisedAssertion, value: any, message: string) {
     return this.eventually.deep.equal(value, message);
   });
 
@@ -247,8 +245,8 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
   });
 
   methodNames.forEach(methodName => {
-    Assertion.overwriteMethod(methodName, originalMethod => function(this: Assertion) {
-      return doAsserterAsyncAndAddThen(originalMethod, this, arguments);
+    Assertion.overwriteMethod(methodName, originalMethod => function(this: Assertion, ...otherArgs: any[]) {
+      return doAsserterAsyncAndAddThen(originalMethod, this, otherArgs);
     });
   });
 
@@ -259,18 +257,16 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
   getterNames.forEach(getterName => {
     // Chainable methods are things like `an`, which can work both for `.should.be.an.instanceOf` and as
     // `should.be.an("object")`. We need to handle those specially.
-    // @ts-ignore
     const isChainableMethod = Assertion.prototype.__methods.hasOwnProperty(getterName);
 
     if (isChainableMethod) {
       Assertion.overwriteChainableMethod(
         getterName,
-        originalMethod => function(this: Assertion) {
-          return doAsserterAsyncAndAddThen(originalMethod, this, arguments);
+        originalMethod => function(this: Assertion, ...otherArgs: any[]) {
+          return doAsserterAsyncAndAddThen(originalMethod, this, otherArgs);
         },
-        // @ts-ignore
-        (originalGetter: any) => function(this: PromiseAssertion) {
-          return doAsserterAsyncAndAddThen(originalGetter, this);
+        (originalGetter: any) => function(this: Assertion) {
+          doAsserterAsyncAndAddThen(originalGetter, this);
         }
       );
     } else {
@@ -292,7 +288,6 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
       // Set up the environment for the asserter to actually run: `_obj` should be the fulfillment value, and
       // now that we have the value, we're no longer in "eventually" mode, so we won't run any of this code,
       // just the base Chai code that we get to via the short-circuit above.
-      // @ts-ignore
       assertion._obj = value;
       utils.flag(assertion, 'eventually', false);
 
@@ -303,7 +298,6 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
       // Because asserters, for example `property`, can change the value of `_obj` (i.e. change the "object"
       // flag), we need to communicate this value change to subsequent chained asserters. Since we build a
       // promise chain paralleling the asserter chain, we can use it to communicate such changes.
-      // @ts-ignore
       return assertion._obj;
     });
 
@@ -313,13 +307,11 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
 
   // ### Now use the `Assertion` framework to build an `assert` interface.
   const originalAssertMethods = Object.getOwnPropertyNames(assert).filter(propName => {
-    // @ts-ignore
     return typeof assert[propName] === 'function';
   });
 
   assert.isFulfilled = (promise, message) => (new Assertion(promise, message)).to.be.fulfilled;
 
-  // @ts-ignore
   assert.isRejected = (promise: PromiseLike<any>, errorLike: Function | Error, errMsgMatcher: string | RegExp, message: string) => {
     const assertion = new Assertion(promise, message);
     return assertion.to.be.rejectedWith(errorLike, errMsgMatcher, message);

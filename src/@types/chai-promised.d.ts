@@ -20,6 +20,8 @@ declare namespace Chai {
     rejectedWith: PromisedThrow;
     notify(fn: Function): PromisedAssertion;
     then: any
+    _obj?: any
+    assert: any
   }
 
   export interface AssertStatic extends Assert, Record<string, any> {
@@ -249,11 +251,6 @@ declare namespace Chai {
     isFulfilled(promise: PromiseLike<any>, message?: string): PromiseLike<void>;
     becomes(promise: PromiseLike<any>, expected: any, message?: string): PromiseLike<void>;
     doesNotBecome(promise: PromiseLike<any>, expected: any, message?: string): PromiseLike<void>;
-    isRejected(promise: PromiseLike<any>, errorLike: Function | Error, errMsgMatcher: string | RegExp, message: string): PromiseLike<void>;
-    isRejected(promise: PromiseLike<any>, message?: string): PromiseLike<void>;
-    isRejected(promise: PromiseLike<any>, expected: any, message?: string): PromiseLike<void>;
-    isRejected(promise: PromiseLike<any>, expected: any, errMsgMatcher: RegExp | string | undefined, message?: string): PromiseLike<void>;
-    isRejected(promise: PromiseLike<any>, match: RegExp, message?: string): PromiseLike<void>;
     notify(fn: Function): PromiseLike<void>;
   }
 
@@ -488,5 +485,19 @@ declare namespace Chai {
 
     isEmpty(val: PromiseLike<any>, msg?: string): ChaiPromise<void>;
     isNotEmpty(val: PromiseLike<any>, msg?: string): ChaiPromise<void>;
+  }
+
+  export interface AssertionPrototype {
+    assert(...args: AssertionArgs): void;
+    _obj: any;
+    __methods: any,
+  }
+
+  export interface AssertionStatic extends AssertionPrototype {
+    overwriteChainableMethod(
+      name: string,
+      method: (this: AssertionStatic, ...args: any[]) => void,
+      chainingBehavior?: (originalGetter: any) => any,
+    ): void;
   }
 }
