@@ -2,15 +2,13 @@
 import PromisedAssertion = Chai.PromisedAssertion;
 import Assertion = Chai.Assertion;
 import PromisedAssert = Chai.PromisedAssert;
+import * as checkErrorUtils from 'check-error';
 
 export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void {
   const Assertion = chai.Assertion;
   const assert = chai.assert;
   const proxify = utils.proxify;
-
-  //  if ((utils as any).checkError) {
-  const checkError = (utils as any).checkError;
-  //  }
+  const checkError = (utils as any).checkError ?? checkErrorUtils;
 
   function isLegacyJQueryPromise(thenable: any) {
     return typeof thenable.catch !== 'function' &&

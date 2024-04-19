@@ -1,6 +1,6 @@
 {
   "name": "chai-promised",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Extends Chai with assertions about promises.",
   "keywords": [
     "chai",
@@ -17,15 +17,18 @@
     "type": "git",
     "url": "git@github.com:ramanarupa/chai-promised.git"
   },
-  "author": "Domenic Denicola <d@domenic.me> (https://domenic.me)",
   "contributors": [
+    {
+      "name": "Domenic Denicola",
+      "email": "d@domenic.me"
+    },
     {
       "name": "Rustam Gaifiev",
       "email": "rustam.bmt@gmail.com"
     }
   ],
   "license": "WTFPL",
-  "packageManager": "pnpm@8.12.1",
+  "packageManager": "pnpm@9.0.0",
   "engines": {
     "node": ">=20.10.0"
   },
@@ -47,8 +50,10 @@
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@rollup/plugin-eslint": "^9.0.5",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/chai": "^4.3.14",
+    "@types/check-error": "^1.0.3",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.12.7",
     "@typescript-eslint/eslint-plugin": "^7.7.0",
