@@ -1,5 +1,5 @@
 <a href="http://promisesaplus.com/">
-    <img src="https://promises-aplus.github.io/promises-spec/assets/logo-small.png"
+    <img src="https://promises-aplus.github.io/promises-spec/assets/logo-small.png" width="70px"
          align="right" valign="top" alt="Promises/A+ logo" />
 </a>
 
@@ -10,7 +10,7 @@
 ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Framanarupa%2Fchai-promised%2Fmaster%2Fpackage.json&query=%24.devDependencies.rollup&label=rollup)
 [![pnpm](https://img.shields.io/npm/v/pnpm?label=pnpm)](https://www.npmjs.com/package/pnpm)
 
-It is a fork of **Chai as Promised** for supporting Chai >= 5.x  
+It is a fork of **Chai as Promised** for supporting Chai >= 5.x and typescript.  
 Please see documentation at [chai-as-promised](https://www.chaijs.com/plugins/chai-as-promised/)  
 
 ## Installation
@@ -19,6 +19,8 @@ Please see documentation at [chai-as-promised](https://www.chaijs.com/plugins/ch
 `npm install chai-promised --save-dev`  
 
 ## Usage
+
+This library was developed primarily to support the development of unit tests using typescript.  
 
 ``` javascript
 import { chaiAsPromised } from 'chai-promised';

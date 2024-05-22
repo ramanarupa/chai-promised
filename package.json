@@ -1,6 +1,6 @@
 {
   "name": "chai-promised",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Extends Chai with assertions about promises.",
   "keywords": [
     "chai",
@@ -28,7 +28,7 @@
     }
   ],
   "license": "WTFPL",
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@9.1.2",
   "engines": {
     "node": ">=20.10.0"
   },
