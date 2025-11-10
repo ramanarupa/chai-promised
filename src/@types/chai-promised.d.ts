@@ -1,10 +1,11 @@
 declare module 'chai-promised' {
+  export default function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void;
   export function chaiAsPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void;
   export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void;
   export function transformAsserterArgs(values: any): any;
-  export function changeTransformAsserterArgs(newTransform: Function): Function;
+  export function setTransformAsserterArgs(fn: ((values: any) => any) | null): void;
   export function transferPromiseness(assertion: Chai.Assertion, promise: Promise<any>): void;
-  export function chageTransferPromiseness(newTransfer: Function): Function;
+  export function setTransferPromiseness(fn: ((assertion: Chai.Assertion, promise: Promise<any>) => void) | null): void;
 }
 
 declare namespace Chai {

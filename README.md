@@ -158,7 +158,51 @@ import { chaiAsPromised, chaiPromised } from 'chai-promised';
 // Both exports are available (aliases)
 chai.use(chaiAsPromised);
 chai.use(chaiPromised);
+
+// Default export is also available
+import chaiPromised from 'chai-promised';
+chai.use(chaiPromised);
 ```
+
+## Advanced Configuration
+
+### Customizing Promise Transfer
+
+You can customize how promiseness is transferred to assertions using `setTransferPromiseness`:
+
+```typescript
+import { setTransferPromiseness } from 'chai-promised';
+
+setTransferPromiseness((assertion, promise) => {
+  assertion.then = promise.then.bind(promise);
+  // Add custom promise methods, e.g., for Q or Bluebird
+  assertion.finally = promise.finally?.bind(promise);
+});
+
+// Reset to default behavior
+setTransferPromiseness(null);
+```
+
+### Transforming Asserter Arguments
+
+You can transform arguments before assertions are evaluated using `setTransformAsserterArgs`. This is useful for comparing promises against other promises:
+
+```typescript
+import { setTransformAsserterArgs } from 'chai-promised';
+
+// Enable promise comparison by resolving all arguments
+setTransformAsserterArgs(Promise.all.bind(Promise));
+
+// Now you can compare promises directly
+await expect(Promise.resolve('foo')).to.eventually.equal(Promise.resolve('foo'));
+
+// Reset to default behavior
+setTransformAsserterArgs(null);
+```
+
+## Compatibility
+
+This library is fully compatible with the original [chai-as-promised](https://github.com/chaijs/chai-as-promised) API (v7.1.2) and maintains the same behavior while providing full TypeScript support for Chai 5.x and 6.x.
 
 ## License
 

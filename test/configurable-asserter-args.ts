@@ -1,16 +1,14 @@
 import * as chaiPromise from '../src/chai-promised';
-import { changeTransformAsserterArgs } from '../src/chai-promised';
+import { setTransformAsserterArgs } from '../src/chai-promised';
 
 describe("Configuring the way in which asserter arguments are transformed", () => {
-    let originalTransformAsserterArgs: Function;
 
     beforeEach(() => {
-        originalTransformAsserterArgs = chaiPromise.changeTransformAsserterArgs( Promise.all.bind(Promise));
+        chaiPromise.setTransformAsserterArgs( Promise.all.bind(Promise));
     });
 
     afterEach(() => {
-        // @ts-ignore
-        chaiPromise.changeTransformAsserterArgs(originalTransformAsserterArgs);
+        chaiPromise.setTransformAsserterArgs(null);
     });
 
     it("should override transformAsserterArgs and allow to compare promises", () => {
@@ -24,7 +22,7 @@ describe("Configuring the way in which asserter arguments are transformed", () =
     });
 
     it("should not invoke transformAsserterArgs for chai properties", () => {
-        chaiPromise.changeTransformAsserterArgs( () => {
+        chaiPromise.setTransformAsserterArgs( () => {
             throw new Error("transformAsserterArgs should not be called for chai properties");
         });
 
@@ -32,7 +30,7 @@ describe("Configuring the way in which asserter arguments are transformed", () =
     });
 
     it("should transform asserter args", () => {
-        chaiPromise.changeTransformAsserterArgs( (args: Iterable<unknown> | ArrayLike<unknown>) => {
+        chaiPromise.setTransformAsserterArgs( (args: Iterable<unknown> | ArrayLike<unknown>) => {
             return Array.from(args).map((x: any) => x + 1);
         });
 

@@ -1,9 +1,6 @@
 import * as chai from "chai";
-function shouldGuard(fn: Function, msg: string, op?: string) {
-    if (op)
-        fn.should.throw(`Invalid Chai property: ${op}.${msg}. See docs for proper usage of "${op}"`);
-    else
-        fn.should.throw(`Invalid Chai property: ${msg}`);
+function shouldGuard(fn: Function, msg: string) {
+    fn.should.throw(`Invalid Chai property: ${msg}`);
 }
 
 describe("Proxy guard", () => {
@@ -20,17 +17,17 @@ describe("Proxy guard", () => {
 
     it("should guard against invalid property following `.should`", () => {
         // @ts-ignore
-        shouldGuard(() => number.should.pizza, "pizza", '');
+        shouldGuard(() => number.should.pizza, "pizza");
     });
 
     it("should guard against invalid property following overwritten language chain", () => {
         // @ts-ignore
-        shouldGuard(() => number.should.to.pizza, 'to.pizza. See docs for proper usage of "to"');
+        shouldGuard(() => number.should.to.pizza, 'pizza');
     });
 
     it("should guard against invalid property following overwritten property assertion", () => {
         // @ts-ignore
-        shouldGuard(() => number.should.ok.pizza, 'ok.pizza. See docs for proper usage of "ok"');
+        shouldGuard(() => number.should.ok.pizza, 'pizza');
     });
 
     it("should guard against invalid property following uncalled overwritten method assertion", () => {
@@ -55,17 +52,17 @@ describe("Proxy guard", () => {
 
     it("should guard against invalid property following `.eventually`", () => {
         // @ts-ignore
-        shouldGuard(() => promise.should.eventually.pizza, "pizza", 'eventually');
+        shouldGuard(() => promise.should.eventually.pizza, "pizza");
     });
 
     it("should guard against invalid property following `.fulfilled`", () => {
         // @ts-ignore
-        shouldGuard(() => promise.should.fulfilled.pizza, "pizza", 'fulfilled');
+        shouldGuard(() => promise.should.fulfilled.pizza, "pizza");
     });
 
     it("should guard against invalid property following `.rejected`", () => {
         // @ts-ignore
-        shouldGuard(() => promise.should.rejected.pizza, "pizza", 'rejected');
+        shouldGuard(() => promise.should.rejected.pizza, "pizza");
     });
 
     it("should guard against invalid property following called `.rejectedWith`", () => {
@@ -80,7 +77,7 @@ describe("Proxy guard", () => {
 
     it("should guard against invalid property following called `.become`", () => {
         // @ts-ignore
-        shouldGuard(() => promise.should.become(42).pizza, "pizza", 'deep');
+        shouldGuard(() => promise.should.become(42).pizza, "pizza");
     });
 
     it("should guard against invalid property following uncalled `.become`", () => {

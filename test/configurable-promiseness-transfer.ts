@@ -1,8 +1,8 @@
-import { chageTransferPromiseness, chaiPromised } from '../src/chai-promised';
+import { setTransferPromiseness, chaiPromised } from '../src/chai-promised';
 
 describe("Configuring the way in which promise-ness is transferred", () => {
     it("should return a promise with the custom modifications applied", () => {
-        const prev = chageTransferPromiseness( (assertion: { then: any; isCustomized: boolean; }, promise: Promise<any>) => {
+        setTransferPromiseness( (assertion: { then: any; isCustomized: boolean; }, promise: Promise<any>) => {
             assertion.then = promise.then.bind(promise);
             assertion.isCustomized = true;
         });
@@ -11,6 +11,6 @@ describe("Configuring the way in which promise-ness is transferred", () => {
         const assertion = promise.should.become("1234");
 
         assertion.should.have.property("isCustomized", true);
-        chageTransferPromiseness(prev);
+        setTransferPromiseness(null);
     });
 });

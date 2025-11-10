@@ -34,8 +34,8 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
     }
   }
 
-  function proxifyIfSupported(assertion: Chai.Assertion, methodName: string) {
-    return proxify === undefined ? assertion : proxify(assertion, methodName);
+  function proxifyIfSupported(assertion: Chai.Assertion) {
+    return proxify === undefined ? assertion : (proxify as any)(assertion);
   }
 
   function method(name: string, asserter: Function) {
@@ -49,7 +49,7 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
   function property(name: string, asserter: any) {
     utils.addProperty(Assertion.prototype, name, function(this: Chai.Assertion, ...otherArgs: any[]) {
       assertIsAboutPromise(this);
-      return proxifyIfSupported(asserter.apply(this, otherArgs), name);
+      return proxifyIfSupported(asserter.apply(this, otherArgs));
     });
   }
 
@@ -180,7 +180,8 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
           checkError.compatibleInstance(reason, errorLike) :
           checkError.compatibleConstructor(reason, errorLike));
 
-        const errMsgMatcherCompatible = errMsgMatcher && checkError.compatibleMessage(reason, errMsgMatcher);
+        const errMsgMatcherCompatible = errMsgMatcher === reason ||
+          (errMsgMatcher && reason && checkError.compatibleMessage(reason, errMsgMatcher));
 
         const reasonName = getReasonName(reason);
 
@@ -255,7 +256,10 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
   getterNames.forEach(getterName => {
     // Chainable methods are things like `an`, which can work both for `.should.be.an.instanceOf` and as
     // `should.be.an("object")`. We need to handle those specially.
-    const isChainableMethod = Assertion.prototype.__methods.hasOwnProperty(getterName);
+    const isChainableMethod = Object.prototype.hasOwnProperty.call(
+      Assertion.prototype.__methods,
+      getterName
+    );
 
     if (isChainableMethod) {
       Assertion.overwriteChainableMethod(
@@ -269,7 +273,7 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
       );
     } else {
       Assertion.overwriteProperty(getterName, originalGetter => function(this: Assertion) {
-        return proxifyIfSupported(doAsserterAsyncAndAddThen(originalGetter, this), getterName);
+        return proxifyIfSupported(doAsserterAsyncAndAddThen(originalGetter, this));
       });
     }
   });
@@ -321,9 +325,11 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
 
   originalAssertMethods.forEach((assertMethodName: string) => {
 
-    assert.eventually[assertMethodName] = function(promise: Promise<any>, ...otherArgs: any[]): Chai.ChaiPromise<any> {
+    assert.eventually[assertMethodName] = function(promise: Promise<any>): Chai.ChaiPromise<any> {
+      const otherArgs = Array.prototype.slice.call(arguments, 1);
+
       let customRejectionHandler;
-      const message = otherArgs[assert[assertMethodName].length-2];
+      const message = arguments[assert[assertMethodName].length - 1];
       if (typeof message === 'string') {
         customRejectionHandler = (reason: any) => {
           throw new chai.AssertionError(`${message}\n\nOriginal reason: ${utils.inspect(reason)}`);
@@ -331,7 +337,8 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
       }
 
       const returnedPromise: Record<string, any> = promise.then(
-        (fulfillmentValue: any) => assert[assertMethodName](fulfillmentValue, ...otherArgs), customRejectionHandler
+        (fulfillmentValue: any) => assert[assertMethodName].apply(assert, [fulfillmentValue].concat(otherArgs)),
+        customRejectionHandler
       );
       returnedPromise.notify = (done: any) => {
         doNotify(returnedPromise as Promise<any>, done);
@@ -342,20 +349,39 @@ export function chaiPromised(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils): void
   });
 }
 
-export let transferPromiseness = (assertion: Assertion, promise: Promise<any>) => {
+function defaultTransferPromiseness(assertion: Assertion, promise: Promise<any>): void {
   assertion.then = promise.then.bind(promise);
-};
+}
 
-export const chageTransferPromiseness = (newTransfer: any) => {
-  const prev = transferPromiseness;
-  transferPromiseness = newTransfer;
-  return prev;
+function defaultTransformAsserterArgs(values: any): any {
+  return values;
+}
+
+let customTransferPromiseness: ((assertion: Assertion, promise: Promise<any>) => void) | undefined;
+let customTransformAsserterArgs: ((values: any) => any) | undefined;
+
+export function setTransferPromiseness(fn: ((assertion: Assertion, promise: Promise<any>) => void) | null): void {
+  customTransferPromiseness = fn || undefined;
+}
+
+export function setTransformAsserterArgs(fn: ((values: any) => any) | null): void {
+  customTransformAsserterArgs = fn || undefined;
+}
+
+export function transferPromiseness(assertion: Assertion, promise: Promise<any>): void {
+  if (customTransferPromiseness) {
+    customTransferPromiseness(assertion, promise);
+  } else {
+    defaultTransferPromiseness(assertion, promise);
+  }
+}
+
+export function transformAsserterArgs(values: any): any {
+  if (customTransformAsserterArgs) {
+    return customTransformAsserterArgs(values);
+  }
+  return defaultTransformAsserterArgs(values);
 }
 
 export const chaiAsPromised = chaiPromised;
-export let transformAsserterArgs = (values: any) => values;
-export const changeTransformAsserterArgs = (newTransform: any) => {
-  const prev = transformAsserterArgs;
-  transformAsserterArgs = newTransform;
-  return prev;
-}
+export default chaiPromised;
